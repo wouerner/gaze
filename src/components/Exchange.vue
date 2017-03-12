@@ -6,11 +6,7 @@
         </div>
         <div class="col-md-8">
             <h1>Poloniex View Trade</h1>
-            <button v-on:click="getData" value="ETH" class="btn btn-default">ETH</button>
-            <button v-on:click="getData" value="XRP" class="btn btn-default">XRP</button>
-            <button v-on:click="getData" value="DASH" class="btn btn-default">DASH</button>
-            <button v-on:click="getData" value="XMR" class="btn btn-default">XMR</button>
-            <button v-on:click="getData" value="MAID" class="btn btn-default">MAID</button>
+            <button v-for="(currency, index ) in currencies" v-on:click="getData" v-bind:value="index" class="btn btn-default"> {{index}} </button>
         </div>
     </div>
     <div class="row">
@@ -141,7 +137,8 @@ export default {
       rateAvgSell: 0,
       amountSell: 0,
       totalSell: 0,
-      rateCurrent: 0
+      rateCurrent: 0,
+      currencies: []
     }
   },
   computed: {
@@ -163,6 +160,13 @@ export default {
     imagePath: function () {
       return require('../assets/' + this.currency + '.png')
     }
+  },
+  mounted: function () {
+    this.$http
+        .get('http://local.phpolo/api.php?comando=currencies')
+        .then(response => {
+          this.currencies = response.body
+        })
   },
   methods: {
     getData: function (event) {

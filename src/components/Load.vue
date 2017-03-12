@@ -3,6 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Poloniex View Load Data</h1>
+            <button v-on:click="eraseDataAll" class="btn btn-danger">Reset All</button>
             <table class="table table-striped">
                 <thead>
                     <th>
@@ -44,6 +45,13 @@ export default {
     eraseData: function (currency) {
       this.$http
           .get('http://local.phpolo/load.php?comando=eraseData&currency=' + currency)
+          .then(response => {
+            this.coinsSell = response.body
+          })
+    },
+    eraseDataAll: function () {
+      this.$http
+          .get('http://local.phpolo/load.php?comando=eraseData')
           .then(response => {
             this.coinsSell = response.body
           })
