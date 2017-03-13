@@ -10,6 +10,9 @@
                         Currency
                     </th>
                     <th>
+                        filter
+                    </th>
+                    <th>
                         action
                     </th>
                 </thead>
@@ -17,6 +20,13 @@
                     <tr v-for="(currency, index) in currencies">
                         <td>
                             {{index}}
+                        </td>
+                        <td>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    from  <input name="from" class="form-control"> to <input name="toData" class="form-control" v-model="toDate">
+                                </div>
+                            </form>
                         </td>
                         <td>
                             <button v-on:click="load(index)" class="btn btn-success">Load</button>
@@ -32,6 +42,8 @@
 
 <script>
 
+import moment from 'moment'
+
 export default {
   name: 'load',
   data () {
@@ -40,6 +52,9 @@ export default {
     }
   },
   computed: {
+    toDate: function () {
+      return moment().format('YYYY-MM-D H:m:s')
+    }
   },
   methods: {
     eraseData: function (currency) {
@@ -57,9 +72,9 @@ export default {
           })
     },
     load: function (currency) {
-      console.log(currency)
+      console.log(currency, this.toDate)
       this.$http
-          .get('http://local.phpolo/load.php?comando=load&currency=' + currency)
+          .get('http://local.phpolo/load.php?comando=load&currency=' + currency + '&end=' + moment(this.toDate).utc().unix())
           .then(response => {
             this.coinsSell = response.body
           })
