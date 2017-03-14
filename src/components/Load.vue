@@ -24,7 +24,7 @@
                         <td>
                             <form class="form-inline">
                                 <div class="form-group">
-                                    from  <input name="from" class="form-control"> to <input name="toData" class="form-control" v-model="toDate">
+                                    from  <input name="from" class="form-control" v-model="fromDate"> to <input name="toData" class="form-control" v-model="toDate">
                                 </div>
                             </form>
                         </td>
@@ -48,12 +48,13 @@ export default {
   name: 'load',
   data () {
     return {
-      currencies: []
+      currencies: [],
+      fromDate: '2016-01-01 00:00:00'
     }
   },
   computed: {
     toDate: function () {
-      return moment().format('YYYY-MM-D H:m:s')
+      return moment().format('YYYY-MM-D H:mm:s')
     }
   },
   methods: {
@@ -74,7 +75,9 @@ export default {
     load: function (currency) {
       console.log(currency, this.toDate)
       this.$http
-          .get('http://local.phpolo/load.php?comando=load&currency=' + currency + '&end=' + moment(this.toDate).utc().unix())
+          .get('http://local.phpolo/load.php?comando=load&currency=' + currency +
+            '&end=' + moment(this.toDate).utc().unix() +
+            '&start=' + moment(this.fromDate).utc().unix())
           .then(response => {
             this.coinsSell = response.body
           })

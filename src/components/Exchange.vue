@@ -44,8 +44,16 @@
                 </tr>
             </tbody>
         </table>
-        <div class="panel panel-default">
-          <div class="panel-heading">Compras</div>
+        <div class="panel panel-success">
+          <div class="panel-heading">Compras
+                <form class="form-inline">
+                    <label>from</label>
+                    <input name="fromDate" class="form-control" v-model="fromDateBuy">
+                    <label>to</label>
+                    <input name="toDate" class="form-control" v-model="toDateBuy">
+                    <button class="btn btn-default">filter</button>
+                </form>
+          </div>
             <table class="table table-bordered table-striped table-responsive table-condensed">
                 <thead>
                     <tr>
@@ -90,8 +98,16 @@
             </tbody>
         </table>
 
-        <div class="panel panel-default">
-          <div class="panel-heading">Vendas</div>
+        <div class="panel  panel-danger">
+          <div class="panel-heading">Vendas
+                <form class="form-inline">
+                    <label>from</label>
+                    <input name="fromDate" class="form-control" v-model="fromDateSell">
+                    <label>to</label>
+                    <input name="toDate" class="form-control" v-model="toDateSell">
+                    <button class="btn btn-default">filter</button>
+                </form>
+          </div>
                 <table class="table table-bordered table-striped table-responsive table-condensed">
                     <thead>
                         <tr>
@@ -121,6 +137,7 @@
 <script>
 
 import lodash from 'lodash'
+import moment from 'moment'
 
 var _ = lodash
 
@@ -138,7 +155,11 @@ export default {
       amountSell: 0,
       totalSell: 0,
       rateCurrent: 0,
-      currencies: []
+      currencies: [],
+      fromDateBuy: '2016-01-01 00:00:00',
+      toDateBuy: moment().format('YYYY-MM-D H:mm:ss'),
+      fromDateSell: '2016-01-01 00:00:00',
+      toDateSell: moment().format('YYYY-MM-D H:mm:ss')
     }
   },
   computed: {
@@ -171,7 +192,11 @@ export default {
   methods: {
     getData: function (event) {
       this.currency = event.target.value
-      this.$http.get('http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=sell')
+      var urlSell = 'http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=sell' +
+          '&fromDate=' + this.fromDateSell +
+          '&toDate=' + this.toDateSell
+
+      this.$http.get(urlSell)
           .then(response => {
             this.coinsSell = response.body
 
@@ -188,7 +213,11 @@ export default {
             })).toFixed(8)
           })
 
-      this.$http.get('http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=buy')
+      var urlBuy = 'http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=buy' +
+            '&fromDate=' + this.fromDateBuy +
+            '&toDate=' + this.toDateBuy
+
+      this.$http.get(urlBuy)
           .then(response => {
             this.coinsBuy = response.body
 
