@@ -39,8 +39,8 @@
             <tbody>
                 <tr>
                     <td> {{ rateAvgBuy  }} </td>
-                    <td> {{ totalBuy  }} </td>
                     <td> {{ amountBuy  }} </td>
+                    <td> {{ totalBuy  }} </td>
                 </tr>
             </tbody>
         </table>
@@ -57,6 +57,7 @@
             <table class="table table-bordered table-striped table-responsive table-condensed">
                 <thead>
                     <tr>
+                        <th>  </th>
                         <th> Date </th>
                         <th> Rate </th>
                         <th> Amount </th>
@@ -65,17 +66,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="coin in coinsBuy">
-                        <td> {{ coin.date }} </td>
-                        <td> {{ coin.rate }} </td>
-                        <td> {{ coin.amount }} </td>
-                        <td> {{ parseFloat(coin.fee).toFixed(4) * 100 }} </td>
-                        <td> {{ coin.total }} </td>
-                    </tr>
+                    <template v-if="coinsBuy">
+                        <tr v-for="coin in coinsBuy">
+							<td>
+								<template v-if="coin.marked == 1">
+									<input  checked type="checkbox"/>
+								</template>
+								<template v-else>
+									<input type="checkbox"/>
+								</template>
+							</td>
+                            <td> {{ coin.date }} </td>
+                            <td> {{ coin.rate }} </td>
+                            <td> {{ coin.amount }} </td>
+                            <td> {{ parseFloat(coin.fee).toFixed(4) * 100 }} </td>
+                            <td> {{ coin.total }} </td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <tr>
+                            <td colspan="5"> no data </td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
-
     </div>
     <div class="col-md-6 ">
         <table class="table table-bordered table-responsive">
@@ -92,8 +107,8 @@
             <tbody>
                 <tr>
                     <td> {{ rateAvgSell  }} </td>
-                    <td> {{ totalSell  }} </td>
                     <td> {{ amountSell  }} </td>
+                    <td> {{ totalSell  }} </td>
                 </tr>
             </tbody>
         </table>
@@ -111,6 +126,7 @@
                 <table class="table table-bordered table-striped table-responsive table-condensed">
                     <thead>
                         <tr>
+                            <th>  </th>
                             <th> date </th>
                             <th> Rate </th>
                             <th> Amount </th>
@@ -119,13 +135,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="coin in coinsSell">
-                            <td> {{ coin.date  }} </td>
-                            <td> {{ coin.rate  }} </td>
-                            <td> {{ coin.amount  }} </td>
-                            <td> {{ parseFloat(coin.fee).toFixed(4) * 100 }} </td>
-                            <td> {{ coin.total  }} </td>
-                        </tr>
+                        <template v-if="coinsSell">
+                            <tr v-for="coin in coinsSell">
+                                <td> <input type="checkbox" class="form-control"/> </td>
+                                <td> {{ coin.date  }} </td>
+                                <td> {{ coin.rate  }} </td>
+                                <td> {{ coin.amount  }} </td>
+                                <td> {{ parseFloat(coin.fee).toFixed(4) * 100 }} </td>
+                                <td> {{ coin.total  }} </td>
+                            </tr>
+                        </template>
+                        <template v-else>
+                            <tr>
+                                <td colspan="5"> no data </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
         </div>
