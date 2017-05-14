@@ -6,7 +6,7 @@
         </div>
         <div class="col-md-8">
             <h1>Poloniex View Trade</h1>
-            <button v-for="(currency, index ) in currencies" v-on:click="getData" v-bind:value="index" class="btn btn-default"> {{index}} </button>
+			<button v-for="(currency, index ) in currencies" v-on:click="getData" v-bind:value="index" class="btn btn-default btn-lg"> {{index}} </button>
         </div>
     </div>
     <div class="row">
@@ -70,10 +70,10 @@
                         <tr v-for="coin in coinsBuy">
 							<td>
 								<template v-if="coin.marked == 1">
-									<input  checked type="checkbox"/>
+									<input  checked type="checkbox" v-bind:value='coin.globalTradeID'/>
 								</template>
 								<template v-else>
-									<input type="checkbox"/>
+									<input type="checkbox" v-bind:value='coin.globalTradeID'/>
 								</template>
 							</td>
                             <td> {{ coin.date }} </td>
@@ -137,7 +137,7 @@
                     <tbody>
                         <template v-if="coinsSell">
                             <tr v-for="coin in coinsSell">
-                                <td> <input type="checkbox" class="form-control"/> </td>
+                                <td> <input type="checkbox" class="form-control" v-bind:value='coin.globalTradeID'/> </td>
                                 <td> {{ coin.date  }} </td>
                                 <td> {{ coin.rate  }} </td>
                                 <td> {{ coin.amount  }} </td>
@@ -179,7 +179,7 @@ export default {
       amountSell: 0,
       totalSell: 0,
       rateCurrent: 0,
-      currencies: [],
+      currencies: {},
       fromDateBuy: '2016-01-01 00:00:00',
       toDateBuy: moment().format('YYYY-MM-D H:mm:ss'),
       fromDateSell: '2016-01-01 00:00:00',
@@ -207,6 +207,7 @@ export default {
     }
   },
   mounted: function () {
+    this.currencies = { londing: true }
     this.$http
         .get('http://local.phpolo/api.php?comando=currencies')
         .then(response => {
@@ -216,6 +217,7 @@ export default {
   methods: {
     getData: function (event) {
       this.currency = event.target.value
+      console.log(this.$refs)
       var urlSell = 'http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=sell' +
           '&fromDate=' + this.fromDateSell +
           '&toDate=' + this.toDateSell
@@ -261,6 +263,15 @@ export default {
       this.$http.get('http://local.phpolo/api.php?comando=getTicket&currency=' + 'BTC_' + this.currency)
           .then(response => {
             this.rateCurrent = response.body.last
+          })
+    },
+    setMarked: function (event) {
+      var globalTradeID = event.target.value
+      var url = 'http://local.phpolo/api.php?comando=setMarked&globalTradeID=' + globalTradeID
+
+      this.$http.get(url)
+          .then(response => {
+            // this.rateCurrent = response.body.last
           })
     }
   }
