@@ -60,14 +60,14 @@ export default {
   methods: {
     eraseData: function (currency) {
       this.$http
-          .get('http://local.phpolo/load.php?comando=eraseData&currency=' + currency)
+          .get('load.php?comando=eraseData&currency=' + currency)
           .then(response => {
             this.coinsSell = response.body
           })
     },
     eraseDataAll: function () {
       this.$http
-          .get('http://local.phpolo/load.php?comando=eraseData')
+          .get('load.php?comando=eraseData')
           .then(response => {
             this.coinsSell = response.body
           })
@@ -75,7 +75,7 @@ export default {
     load: function (currency) {
       console.log(currency, this.toDate)
       this.$http
-          .get('http://local.phpolo/load.php?comando=load&currency=' + currency +
+          .get('load.php?comando=load&currency=' + currency +
             '&end=' + moment(this.toDate).utc().unix() +
             '&start=' + moment(this.fromDate).utc().unix())
           .then(response => {
@@ -85,7 +85,7 @@ export default {
   },
   mounted: function () {
     this.$http
-        .get('http://local.phpolo/api.php?comando=currencies')
+        .get('api.php?comando=currencies')
         .then(response => {
           this.currencies = response.body
         })

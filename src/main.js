@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 
 Vue.config.productionTip = false
+Vue.http.options.root = 'http://local.phpolo'
 
 /* eslint-disable no-new */
 new Vue({
