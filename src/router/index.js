@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Exchange from '@/components/Exchange'
 import Load from '@/components/Load'
+import Config from '@/components/Config'
 import VueResource from 'vue-resource'
 
 Vue.use(Router)
@@ -24,6 +25,11 @@ export default new Router({
       path: '/Load',
       name: 'Load',
       component: Load
+    },
+    {
+      path: '/Config',
+      name: 'Config',
+      component: Config
     }
   ]
 })
