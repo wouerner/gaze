@@ -6,7 +6,7 @@
         </div>
         <div class="col-md-8">
             <h1>Poloniex View Trade</h1>
-			<button v-for="(currency, index ) in currencies" v-on:click="getData" v-bind:value="index" class="btn btn-default btn-lg"> {{index}} </button>
+			<button v-for="(currency, index ) in currencies" v-on:click="getData" v-bind:value="currency" class="btn btn-default btn-lg"> {{currency}} </button>
         </div>
     </div>
     <div class="row">
@@ -209,7 +209,7 @@ export default {
   mounted: function () {
     this.currencies = { londing: true }
     this.$http
-        .get('http://local.phpolo/api.php?comando=currencies')
+        .get('api/trade-history/currencies')
         .then(response => {
           this.currencies = response.body
         })
@@ -218,13 +218,14 @@ export default {
     getData: function (event) {
       this.currency = event.target.value
       console.log(this.$refs)
-      var urlSell = 'http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=sell' +
-          '&fromDate=' + this.fromDateSell +
-          '&toDate=' + this.toDateSell
+      var urlSell = 'api/trade-history/' + this.currency + '/exchange/sell' +
+          '/' + this.fromDateSell +
+          '/' + this.toDateSell
 
       this.$http.get(urlSell)
           .then(response => {
             this.coinsSell = response.body
+            console.log(this.coinsSell)
 
             this.rateAvgSell = (_.meanBy(this.coinsSell, function (o) {
               return parseFloat(o.rate)
@@ -239,9 +240,9 @@ export default {
             })).toFixed(8)
           })
 
-      var urlBuy = 'http://local.phpolo/api.php?comando=tradeHistory&currency=' + this.currency + '&category=exchange&type=buy' +
-            '&fromDate=' + this.fromDateBuy +
-            '&toDate=' + this.toDateBuy
+      var urlBuy = 'api/trade-history/' + this.currency + '/exchange/buy' +
+            '/' + this.fromDateBuy +
+            '/' + this.toDateBuy
 
       this.$http.get(urlBuy)
           .then(response => {
@@ -260,9 +261,10 @@ export default {
             })).toFixed(8)
           })
 
-      this.$http.get('http://local.phpolo/api.php?comando=getTicket&currency=' + 'BTC_' + this.currency)
+      this.$http.get('https://poloniex.com/public?command=returnTicker')
           .then(response => {
-            this.rateCurrent = response.body.last
+            console.log(response.body[this.currency]['last'])
+            this.rateCurrent = response.body[this.currency]['last']
           })
     },
     setMarked: function (event) {
